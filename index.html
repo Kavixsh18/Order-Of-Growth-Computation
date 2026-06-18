@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KCR-Order-Of-Growth-Computation</title>
+<title>Asymptotic Notation Separated Checker</title>
 
 <style>
 body {
@@ -182,6 +182,56 @@ th {
     line-height: 1.5;
     font-size: 15px;
 }
+
+/* Updated One-at-a-time Grid Copy Style */
+.copy-banner {
+    background: #0f172a;
+    border: 1px solid #334155;
+    padding: 15px;
+    margin-top: 25px;
+    border-radius: 8px;
+    text-align: center;
+}
+.copy-box-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+}
+.superscript-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+.script-tile {
+    background: #1e293b;
+    color: #38bdf8;
+    border: 1px solid #475569;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: monospace;
+    transition: all 0.15s ease;
+}
+.script-tile:hover {
+    background: #334155;
+    border-color: #38bdf8;
+    transform: translateY(-1px);
+}
+.script-tile:active {
+    transform: scale(0.95);
+}
+.copy-toast {
+    font-size: 12px;
+    color: #10b981;
+    margin-top: 8px;
+    height: 15px;
+    font-weight: bold;
+}
 </style>
 </head>
 
@@ -220,7 +270,7 @@ th {
                         <th>n</th>
                         <th>t(n)</th>
                         <th>Sign</th>
-                        <th>g(n)</th>
+                        <th>c · g(n)</th>
                         <th>Status</th>
                         <th>Average Case Performance</th>
                     </tr>
@@ -255,7 +305,7 @@ th {
                         <th>n</th>
                         <th>t(n)</th>
                         <th>Sign</th>
-                        <th>g(n)</th>
+                        <th>c · g(n)</th>
                         <th>Status</th>
                         <th>Average Case Performance</th>
                     </tr>
@@ -296,11 +346,11 @@ th {
                 <thead>
                     <tr>
                         <th>n</th>
-                        <th>g(n)</th>
+                        <th>c₁ · g(n)</th>
                         <th>Sign</th>
                         <th>t(n)</th>
                         <th>Sign</th>
-                        <th>g(n)</th>
+                        <th>c₂ · g(n)</th>
                         <th>Status</th>
                         <th>Average Case Performance</th>
                     </tr>
@@ -311,6 +361,23 @@ th {
         <div class="result" id="result-Theta">Fill inputs and check...</div>
     </div>
 
+    <div class="copy-banner">
+        <span class="copy-box-title">Click an Exponent to Copy to Clipboard:</span>
+        <div class="superscript-grid">
+            <button class="script-tile" onclick="copyIndividual('¹')">¹</button>
+            <button class="script-tile" onclick="copyIndividual('²')">²</button>
+            <button class="script-tile" onclick="copyIndividual('³')">³</button>
+            <button class="script-tile" onclick="copyIndividual('⁴')">⁴</button>
+            <button class="script-tile" onclick="copyIndividual('⁵')">⁵</button>
+            <button class="script-tile" onclick="copyIndividual('⁶')">⁶</button>
+            <button class="script-tile" onclick="copyIndividual('⁷')">⁷</button>
+            <button class="script-tile" onclick="copyIndividual('⁸')">⁸</button>
+            <button class="script-tile" onclick="copyIndividual('⁹')">⁹</button>
+            <button class="script-tile" onclick="copyIndividual('¹⁰')">¹⁰</button>
+        </div>
+        <div id="toast-msg" class="copy-toast"></div>
+    </div>
+
 </div>
 
 <script>
@@ -319,9 +386,19 @@ const superscriptMap = {
     '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9'
 };
 
+function copyIndividual(char) {
+    navigator.clipboard.writeText(char).then(() => {
+        let toast = document.getElementById("toast-msg");
+        toast.innerText = `Copied "${char}" successfully!`;
+        setTimeout(() => { toast.innerText = ""; }, 1800);
+    });
+}
+
 function parseAndEval(expr, nVal) {
     let sanitized = expr.toLowerCase().replace(/\s+/g, '');
     if (!sanitized) return NaN;
+
+    sanitized = sanitized.replace(/¹⁰/g, '^10');
 
     const superRegex = new RegExp(`[${Object.keys(superscriptMap).join('')}]`, 'g');
     sanitized = sanitized.replace(superRegex, (match) => '^' + superscriptMap[match]);
@@ -412,7 +489,6 @@ function applyC(mode, cVal1, cVal2) {
     }
 }
 
-// 1. COMPUTE BIG-O SECTION
 function computeO() {
     let tExpr = document.getElementById("tn-O").value.trim();
     let gExpr = document.getElementById("gn-O").value.trim();
@@ -423,7 +499,7 @@ function computeO() {
         return;
     }
 
-    let ns = [1, 2, 3, 4, 5], rows = "", overallValid = true;
+    let ns = [], rows = "", overallValid = true;
     for (let n of ns) {
         let tn = parseAndEval(tExpr, n), gn = parseAndEval(gExpr, n);
         if (isNaN(tn) || isNaN(gn)) {
@@ -441,7 +517,7 @@ function computeO() {
             <td><b>${n}</b></td>
             <td><b>${tn}</b></td>
             <td><b>≤</b></td>
-            <td><b>${gn}</b></td>
+            <td><b>${c}(${gn})</b></td>
             <td style="color: ${valid ? '#34d399' : '#f87171'}; font-weight: bold;">${valid ? "TRUE" : "FALSE"}</td>
             <td><b>${avgCase}</b></td>
         </tr>`;
@@ -450,7 +526,6 @@ function computeO() {
     document.getElementById("result-O").innerHTML = `Result: ${overallValid ? "<span style='color:#34d399; font-weight:bold;'>TRUE ✔</span>" : "<span style='color:#f87171; font-weight:bold;'>FALSE ✘</span>"}`;
 }
 
-// 2. COMPUTE BIG-OMEGA SECTION
 function computeOmega() {
     let tExpr = document.getElementById("tn-Omega").value.trim();
     let gExpr = document.getElementById("gn-Omega").value.trim();
@@ -461,7 +536,7 @@ function computeOmega() {
         return;
     }
 
-    let ns = [1, 2, 3, 4, 5], rows = "", overallValid = true;
+    let ns = [], rows = "", overallValid = true;
     for (let n of ns) {
         let tn = parseAndEval(tExpr, n), gn = parseAndEval(gExpr, n);
         if (isNaN(tn) || isNaN(gn)) {
@@ -479,7 +554,7 @@ function computeOmega() {
             <td><b>${n}</b></td>
             <td><b>${tn}</b></td>
             <td><b>≥</b></td>
-            <td><b>${gn}</b></td>
+            <td><b>${c}(${gn})</b></td>
             <td style="color: ${valid ? '#34d399' : '#f87171'}; font-weight: bold;">${valid ? "TRUE" : "FALSE"}</td>
             <td><b>${avgCase}</b></td>
         </tr>`;
@@ -488,7 +563,6 @@ function computeOmega() {
     document.getElementById("result-Omega").innerHTML = `Result: ${overallValid ? "<span style='color:#34d399; font-weight:bold;'>TRUE ✔</span>" : "<span style='color:#f87171; font-weight:bold;'>FALSE ✘</span>"}`;
 }
 
-// 3. COMPUTE BIG-THETA SECTION
 function computeTheta() {
     let tExpr = document.getElementById("tn-Theta").value.trim();
     let gExpr = document.getElementById("gn-Theta").value.trim();
@@ -500,7 +574,7 @@ function computeTheta() {
         return;
     }
 
-    let ns = [1, 2, 3, 4, 5], rows = "", overallValid = true;
+    let ns = [], rows = "", overallValid = true;
     for (let n of ns) {
         let tn = parseAndEval(tExpr, n), gn = parseAndEval(gExpr, n);
         if (isNaN(tn) || isNaN(gn)) {
@@ -519,11 +593,11 @@ function computeTheta() {
 
         rows += `<tr>
             <td><b>${n}</b></td>
-            <td><b>${gn}</b></td>
+            <td><b>${c1}(${gn})</b></td>
             <td><b>≤</b></td>
             <td><b>${tn}</b></td>
             <td><b>≤</b></td>
-            <td><b>${gn}</b></td>
+            <td><b>${c2}(${gn})</b></td>
             <td style="color: ${valid ? '#34d399' : '#f87171'}; font-weight: bold;">${valid ? "TRUE" : "FALSE"}</td>
             <td><b>${avgCase}</b></td>
         </tr>`;
