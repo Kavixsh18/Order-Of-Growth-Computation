@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KCR-O.G.C</title>
+<title>Asymptotic Notation Separated Checker</title>
 
 <style>
 body {
@@ -183,7 +183,7 @@ th {
     font-size: 15px;
 }
 
-/* Updated One-at-a-time Grid Copy Style */
+/* One-at-a-time Grid Copy Style */
 .copy-banner {
     background: #0f172a;
     border: 1px solid #334155;
@@ -499,7 +499,7 @@ function computeO() {
         return;
     }
 
-    let ns = [], rows = "", overallValid = true;
+    let ns = [1, 2, 3, 4, 5], rows = "", overallValid = true;
     for (let n of ns) {
         let tn = parseAndEval(tExpr, n), gn = parseAndEval(gExpr, n);
         if (isNaN(tn) || isNaN(gn)) {
@@ -536,7 +536,7 @@ function computeOmega() {
         return;
     }
 
-    let ns = [], rows = "", overallValid = true;
+    let ns = [1, 2, 3, 4, 5], rows = "", overallValid = true;
     for (let n of ns) {
         let tn = parseAndEval(tExpr, n), gn = parseAndEval(gExpr, n);
         if (isNaN(tn) || isNaN(gn)) {
@@ -574,7 +574,7 @@ function computeTheta() {
         return;
     }
 
-    let ns = [], rows = "", overallValid = true;
+    let ns = [1, 2, 3, 4, 5], rows = "", overallValid = true;
     for (let n of ns) {
         let tn = parseAndEval(tExpr, n), gn = parseAndEval(gExpr, n);
         if (isNaN(tn) || isNaN(gn)) {
