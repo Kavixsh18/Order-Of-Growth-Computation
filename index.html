@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Asymptotic Notation Separated Checker</title>
+<title>K.C.R.ORDER OF GROWTH</title>
 
 <style>
 body {
@@ -146,9 +146,18 @@ button.main-btn {
     margin-top: 8px;
     font-size: 15px;
 }
+button.main-btn:hover { background: #7dd3fc; }
 
-button.main-btn:hover {
-    background: #7dd3fc;
+.workspace-metadata {
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    padding: 12px;
+    margin-top: 15px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #cbd5e1;
 }
 
 .table-wrapper {
@@ -165,13 +174,23 @@ table {
 th, td {
     padding: 12px 10px;
     text-align: center;
-    border-bottom: 1px solid #334155;
+    border: 1px solid #334155;
     font-size: 14px;
 }
 
 th {
-    background: #334155;
+    background: #1e293b;
     color: #cbd5e1;
+}
+
+.conclusion-banner {
+    margin-top: 15px;
+    padding: 12px;
+    background: rgba(16, 185, 129, 0.1);
+    border-left: 5px solid #10b981;
+    font-size: 16px;
+    font-weight: 500;
+    color: #34d399;
 }
 
 .result {
@@ -183,7 +202,6 @@ th {
     font-size: 15px;
 }
 
-/* One-at-a-time Grid Copy Style */
 .copy-banner {
     background: #0f172a;
     border: 1px solid #334155;
@@ -222,9 +240,6 @@ th {
     border-color: #38bdf8;
     transform: translateY(-1px);
 }
-.script-tile:active {
-    transform: scale(0.95);
-}
 .copy-toast {
     font-size: 12px;
     color: #10b981;
@@ -251,33 +266,34 @@ th {
             <b>Big-O Formula:</b> t(n) ≤ c · g(n) holds true for all n ≥ n₀.
         </div>
         <label for="tn-O">Algorithm Runtime Function t(n):</label>
-        <input type="text" id="tn-O" placeholder="e.g., 6n + 9" oninput="calculateSuggestedC('O')">
+        <input type="text" id="tn-O" placeholder="e.g., 2n² + 4n + 5" oninput="calculateSuggestedC('O')">
         
         <label for="gn-O">Complexity Growth g(n):</label>
-        <input type="text" id="gn-O" placeholder="e.g., n" oninput="calculateSuggestedC('O')">
+        <input type="text" id="gn-O" placeholder="e.g., n²" oninput="calculateSuggestedC('O')">
         
         <label for="c-O">Constant Multiplier (c):</label>
-        <input type="number" id="c-O" placeholder="e.g., 15">
+        <input type="number" id="c-O" placeholder="e.g., 11">
 
         <div class="computation-box" id="comp-box-O" style="display:none;"></div>
 
         <button class="main-btn" onclick="computeO()">Check Big-O Condition</button>
+
+        <div id="meta-box-O" style="display:none;"></div>
 
         <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>
                         <th>n</th>
-                        <th>t(n)</th>
-                        <th>Sign</th>
-                        <th>c · g(n)</th>
-                        <th>Status</th>
-                        <th>Average Case Performance</th>
+                        <th id="th-tn-O">t(n)</th>
+                        <th id="th-gn-O">g(n)</th>
+                        <th>t(n) &le; c*g(n)</th>
                     </tr>
                 </thead>
                 <tbody id="body-O"></tbody>
             </table>
         </div>
+        <div id="conclusion-O"></div>
         <div class="result" id="result-O">Fill inputs and check...</div>
     </div>
 
@@ -286,33 +302,34 @@ th {
             <b>Big-Ω Formula:</b> t(n) ≥ c · g(n) holds true for all n ≥ n₀.
         </div>
         <label for="tn-Omega">Algorithm Runtime Function t(n):</label>
-        <input type="text" id="tn-Omega" placeholder="e.g., 6n + 9" oninput="calculateSuggestedC('Omega')">
+        <input type="text" id="tn-Omega" placeholder="e.g., 2n² + 4n + 5" oninput="calculateSuggestedC('Omega')">
         
         <label for="gn-Omega">Complexity Growth g(n):</label>
-        <input type="text" id="gn-Omega" placeholder="e.g., n" oninput="calculateSuggestedC('Omega')">
+        <input type="text" id="gn-Omega" placeholder="e.g., n²" oninput="calculateSuggestedC('Omega')">
         
         <label for="c-Omega">Constant Multiplier (c):</label>
-        <input type="number" id="c-Omega" placeholder="e.g., 5">
+        <input type="number" id="c-Omega" placeholder="e.g., 1">
 
         <div class="computation-box" id="comp-box-Omega" style="display:none;"></div>
 
         <button class="main-btn" onclick="computeOmega()">Check Big-Ω Condition</button>
+
+        <div id="meta-box-Omega" style="display:none;"></div>
 
         <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>
                         <th>n</th>
-                        <th>t(n)</th>
-                        <th>Sign</th>
-                        <th>c · g(n)</th>
-                        <th>Status</th>
-                        <th>Average Case Performance</th>
+                        <th id="th-tn-Omega">t(n)</th>
+                        <th id="th-gn-Omega">g(n)</th>
+                        <th>t(n) &ge; c*g(n)</th>
                     </tr>
                 </thead>
                 <tbody id="body-Omega"></tbody>
             </table>
         </div>
+        <div id="conclusion-Omega"></div>
         <div class="result" id="result-Omega">Fill inputs and check...</div>
     </div>
 
@@ -321,19 +338,19 @@ th {
             <b>Big-Θ Formula:</b> Requires two constants: c₁ · g(n) ≤ t(n) ≤ c₂ · g(n)
         </div>
         <label for="tn-Theta">Algorithm Runtime Function t(n):</label>
-        <input type="text" id="tn-Theta" placeholder="e.g., 6n + 9" oninput="calculateSuggestedC('Theta')">
+        <input type="text" id="tn-Theta" placeholder="e.g., 2n² + n" oninput="calculateSuggestedC('Theta')">
         
         <label for="gn-Theta">Complexity Growth g(n):</label>
-        <input type="text" id="gn-Theta" placeholder="e.g., n" oninput="calculateSuggestedC('Theta')">
+        <input type="text" id="gn-Theta" placeholder="e.g., n²" oninput="calculateSuggestedC('Theta')">
         
         <div class="constant-group">
             <div class="constant-field">
                 <label for="c1-Theta">Lower Constant (c1):</label>
-                <input type="number" id="c1-Theta" placeholder="e.g., 6">
+                <input type="number" id="c1-Theta" placeholder="e.g., 1">
             </div>
             <div class="constant-field">
                 <label for="c2-Theta">Upper Constant (c2):</label>
-                <input type="number" id="c2-Theta" placeholder="e.g., 15">
+                <input type="number" id="c2-Theta" placeholder="e.g., 3">
             </div>
         </div>
 
@@ -341,23 +358,23 @@ th {
 
         <button class="main-btn" onclick="computeTheta()">Check Big-Θ Condition</button>
 
+        <div id="meta-box-Theta" style="display:none;"></div>
+
         <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>
                         <th>n</th>
-                        <th>c₁ · g(n)</th>
-                        <th>Sign</th>
-                        <th>t(n)</th>
-                        <th>Sign</th>
-                        <th>c₂ · g(n)</th>
-                        <th>Status</th>
-                        <th>Average Case Performance</th>
+                        <th id="th-c1gn-Theta">c1*g(n)</th>
+                        <th id="th-tn-Theta">t(n)</th>
+                        <th id="th-c2gn-Theta">c2*g(n)</th>
+                        <th>c1*g(n)&le;t(n)&le;c2*g(n)</th>
                     </tr>
                 </thead>
                 <tbody id="body-Theta"></tbody>
             </table>
         </div>
+        <div id="conclusion-Theta"></div>
         <div class="result" id="result-Theta">Fill inputs and check...</div>
     </div>
 
@@ -377,7 +394,6 @@ th {
         </div>
         <div id="toast-msg" class="copy-toast"></div>
     </div>
-
 </div>
 
 <script>
@@ -399,7 +415,6 @@ function parseAndEval(expr, nVal) {
     if (!sanitized) return NaN;
 
     sanitized = sanitized.replace(/¹⁰/g, '^10');
-
     const superRegex = new RegExp(`[${Object.keys(superscriptMap).join('')}]`, 'g');
     sanitized = sanitized.replace(superRegex, (match) => '^' + superscriptMap[match]);
 
@@ -424,7 +439,6 @@ function parseAndEval(expr, nVal) {
 function switchTab(mode) {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById('btn-' + mode).classList.add('active');
-
     document.querySelectorAll('.section-panel').forEach(panel => panel.classList.remove('active'));
     document.getElementById('panel-' + mode).classList.add('active');
 }
@@ -469,13 +483,13 @@ function calculateSuggestedC(mode) {
         `;
     } else if (mode === 'Theta') {
         let suggestedC1 = Math.floor(ratio);
-        let suggestedC2 = Math.ceil(ratio);
+        let maxC2 = Math.ceil(ratio);
         if(suggestedC1 <= 0) suggestedC1 = 1;
         compBox.innerHTML = `
-            <div class="computation-title">Mathematical Constant Computation <button class="apply-btn" onclick="applyC('Theta', ${suggestedC1}, ${suggestedC2})">Apply Both</button></div>
-            At boundary n = 1: t(1) = ${t1}, g(1) = ${g1}. Ratio = ${ratio.toFixed(2)}.<br>
-            Formula derivation: c₁ ≤ ${ratio.toFixed(2)} ≤ c₂.<br>
-            <b>Recommended Tight Bound Constants: c₁ = ${suggestedC1} and c₂ = ${suggestedC2}</b>
+            <div class="computation-title">Mathematical Constant Computation <button class="apply-btn" onclick="applyC('Theta', ${suggestedC1}, ${maxC2})">Apply Both</button></div>
+            At boundary n = 1: c₁ · g(1) ≤ t(1) ≤ c₂ · g(1) ➔ c₁ · (${g1}) ≤ ${t1} ≤ c₂ · (${g1})<br>
+            Condition parameters: <b style="color: #38bdf8;">c₁ ≤ ${ratio.toFixed(2)}</b> and <b style="color: #38bdf8;">c₂ ≥ ${ratio.toFixed(2)}</b><br>
+            <b>Recommended Tight Bound Constants: c₁ = ${suggestedC1} and c₂ = ${maxC2}</b>
         `;
     }
 }
@@ -489,6 +503,12 @@ function applyC(mode, cVal1, cVal2) {
     }
 }
 
+function generateSequence(start, end) {
+    let arr = [];
+    for(let i = start; i <= end; i++) arr.push(i);
+    return "{" + arr.join(",") + "}";
+}
+
 function computeO() {
     let tExpr = document.getElementById("tn-O").value.trim();
     let gExpr = document.getElementById("gn-O").value.trim();
@@ -499,30 +519,40 @@ function computeO() {
         return;
     }
 
+    document.getElementById("th-tn-O").innerHTML = `t(n) = ${tExpr}`;
+    document.getElementById("th-gn-O").innerHTML = `g(n) = ${c}${gExpr}`;
+
     let ns = [1, 2, 3, 4, 5], rows = "", overallValid = true;
     for (let n of ns) {
         let tn = parseAndEval(tExpr, n), gn = parseAndEval(gExpr, n);
-        if (isNaN(tn) || isNaN(gn)) {
-            document.getElementById("result-O").innerHTML = "<b style='color:#f87171;'>Invalid syntax input formula.</b>";
-            return;
-        }
-
         let cgn = c * gn;
         let valid = (tn <= cgn);
         if (!valid) overallValid = false;
-        
-        let avgCase = (0.5 + 0.5 * tn).toFixed(1);
 
         rows += `<tr>
             <td><b>${n}</b></td>
             <td><b>${tn}</b></td>
-            <td><b>≤</b></td>
-            <td><b>${c}(${gn})</b></td>
-            <td style="color: ${valid ? '#34d399' : '#f87171'}; font-weight: bold;">${valid ? "TRUE" : "FALSE"}</td>
-            <td><b>${avgCase}</b></td>
+            <td><b>${cgn}</b></td>
+            <td style="color: ${valid ? '#34d399' : '#f87171'}; font-weight: bold;">${valid ? "T" : "F"}</td>
         </tr>`;
     }
+    
+    document.getElementById("meta-box-O").style.display = "block";
+    document.getElementById("meta-box-O").className = "workspace-metadata";
+    document.getElementById("meta-box-O").innerHTML = `
+        t(n) = ${tExpr}<br>
+        g(n) = ${gExpr}<br>
+        c = 1 | >=${c} ${generateSequence(1, Math.max(c, 11))}<br>
+        n₀ = {1, 2, 3, 4, 5}
+    `;
+
     document.getElementById("body-O").innerHTML = rows;
+    
+    if (overallValid) {
+        document.getElementById("conclusion-O").innerHTML = `<div class="conclusion-banner">Therefore the order of growth of the equation ${tExpr} is ${gExpr}</div>`;
+    } else {
+        document.getElementById("conclusion-O").innerHTML = "";
+    }
     document.getElementById("result-O").innerHTML = `Result: ${overallValid ? "<span style='color:#34d399; font-weight:bold;'>TRUE ✔</span>" : "<span style='color:#f87171; font-weight:bold;'>FALSE ✘</span>"}`;
 }
 
@@ -536,30 +566,40 @@ function computeOmega() {
         return;
     }
 
+    document.getElementById("th-tn-Omega").innerHTML = `t(n) = ${tExpr}`;
+    document.getElementById("th-gn-Omega").innerHTML = `g(n) = ${c}${gExpr}`;
+
     let ns = [1, 2, 3, 4, 5], rows = "", overallValid = true;
     for (let n of ns) {
         let tn = parseAndEval(tExpr, n), gn = parseAndEval(gExpr, n);
-        if (isNaN(tn) || isNaN(gn)) {
-            document.getElementById("result-Omega").innerHTML = "<b style='color:#f87171;'>Invalid syntax input formula.</b>";
-            return;
-        }
-
         let cgn = c * gn;
         let valid = (tn >= cgn);
         if (!valid) overallValid = false;
-        
-        let avgCase = (0.5 + 0.5 * tn).toFixed(1);
 
         rows += `<tr>
             <td><b>${n}</b></td>
             <td><b>${tn}</b></td>
-            <td><b>≥</b></td>
-            <td><b>${c}(${gn})</b></td>
-            <td style="color: ${valid ? '#34d399' : '#f87171'}; font-weight: bold;">${valid ? "TRUE" : "FALSE"}</td>
-            <td><b>${avgCase}</b></td>
+            <td><b>${cgn}</b></td>
+            <td style="color: ${valid ? '#34d399' : '#f87171'}; font-weight: bold;">${valid ? "T" : "F"}</td>
         </tr>`;
     }
+
+    document.getElementById("meta-box-Omega").style.display = "block";
+    document.getElementById("meta-box-Omega").className = "workspace-metadata";
+    document.getElementById("meta-box-Omega").innerHTML = `
+        t(n) = ${tExpr}<br>
+        g(n) = ${gExpr}<br>
+        c = 1 | <=${c} ${generateSequence(1, c)}<br>
+        n₀ = {1, 2, 3, 4, 5}
+    `;
+
     document.getElementById("body-Omega").innerHTML = rows;
+
+    if (overallValid) {
+        document.getElementById("conclusion-Omega").innerHTML = `<div class="conclusion-banner">Therefore the lower bound of the equation ${tExpr} is ${gExpr}</div>`;
+    } else {
+        document.getElementById("conclusion-Omega").innerHTML = "";
+    }
     document.getElementById("result-Omega").innerHTML = `Result: ${overallValid ? "<span style='color:#34d399; font-weight:bold;'>TRUE ✔</span>" : "<span style='color:#f87171; font-weight:bold;'>FALSE ✘</span>"}`;
 }
 
@@ -574,36 +614,53 @@ function computeTheta() {
         return;
     }
 
+    document.getElementById("th-c1gn-Theta").innerHTML = `c1*g(n) = ${c1}${gExpr}`;
+    document.getElementById("th-tn-Theta").innerHTML = `t(n) = ${tExpr}`;
+    document.getElementById("th-c2gn-Theta").innerHTML = `c2*g(n) = ${c2}${gExpr}`;
+
     let ns = [1, 2, 3, 4, 5], rows = "", overallValid = true;
     for (let n of ns) {
         let tn = parseAndEval(tExpr, n), gn = parseAndEval(gExpr, n);
-        if (isNaN(tn) || isNaN(gn)) {
-            document.getElementById("result-Theta").innerHTML = "<b style='color:#f87171;'>Invalid syntax input formula.</b>";
-            return;
-        }
-
+        
+        // Corrected computation: Multiplying active inputs (gn values) by target constants c1 and c2
         let c1gn = c1 * gn;
         let c2gn = c2 * gn;
+        
         let cond1 = (tn >= c1gn);
-        let cond2 = (tn <= c2gn);
+        let cond2 = (c2gn >= tn); 
         let valid = (cond1 && cond2);
         if (!valid) overallValid = false;
-        
-        let avgCase = (0.5 + 0.5 * tn).toFixed(1);
 
         rows += `<tr>
             <td><b>${n}</b></td>
-            <td><b>${c1}(${gn})</b></td>
-            <td><b>≤</b></td>
+            <td><b>${c1gn}</b></td>
             <td><b>${tn}</b></td>
-            <td><b>≤</b></td>
-            <td><b>${c2}(${gn})</b></td>
-            <td style="color: ${valid ? '#34d399' : '#f87171'}; font-weight: bold;">${valid ? "TRUE" : "FALSE"}</td>
-            <td><b>${avgCase}</b></td>
+            <td><b>${c2gn}</b></td>
+            <td style="color: ${valid ? '#34d399' : '#f87171'}; font-weight: bold;">${valid ? "T" : "F"}</td>
         </tr>`;
     }
+
+    let t1 = parseAndEval(tExpr, 1);
+    let g1 = parseAndEval(gExpr, 1);
+    let ratioVal = (t1 / g1);
+
+    document.getElementById("meta-box-Theta").style.display = "block";
+    document.getElementById("meta-box-Theta").className = "workspace-metadata";
+    document.getElementById("meta-box-Theta").innerHTML = `
+        t(n) = ${tExpr}<br>
+        g(n) = ${gExpr}<br>
+        c₁ = 1 | <=${c1} {1,2,${c1}} and c₂ = ${c2} >=${c2} {${c2},4,5,6...}<br>
+        n₀ = {1, 2, 3, 4, 5}
+    `;
+
     document.getElementById("body-Theta").innerHTML = rows;
-    document.getElementById("result-Theta").innerHTML = `Result: ${overallValid ? "<span style='color:#34d399; font-weight:bold;'>TRUE ✔</span>" : "<span style='color:#f87171; font-weight:bold;'>FALSE ✘</span>"}`;
+
+    if (overallValid) {
+        document.getElementById("conclusion-Theta").innerHTML = `<div class="conclusion-banner">Therefore the average case of the equation ${tExpr} is ${gExpr}</div>`;
+    } else {
+        document.getElementById("conclusion-Theta").innerHTML = "";
+    }
+    document.getElementById("result-Theta").innerHTML = `Result: ${overallValid ? "<span style='color:#34d399; font-weight:bold;'>TRUE ✔</span>" : "<span style='color:#f87171; font-weight:bold;'>FALSE ✘ (Tight asymptotic range violated)</span>"}`;
 }
 </script>
 
